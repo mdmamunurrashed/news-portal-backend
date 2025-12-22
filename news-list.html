@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News List - News Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .header {
+            background: #667eea;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .top-bar h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .create-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .create-btn:hover {
+            background: #059669;
+        }
+
+        .news-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .news-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .news-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .news-card h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .news-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .news-meta strong {
+            color: #667eea;
+        }
+
+        .comment-count {
+            color: #10b981;
+            margin-left: 15px;
+        }
+
+        .news-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #5568d3;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #d97706;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .no-news {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            color: #666;
+        }
+
+        .no-news h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>📰 News Portal</h1>
+            <div class="user-info">
+                <span id="userName">Logged in as: <strong>...</strong></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-bar">
+            <h2>All News</h2>
+            <button class="create-btn" onclick="window.location.href='create-news.html'">
+                ➕ Create News
+            </button>
+        </div>
+
+        <div id="newsContainer">
+            <div class="loading">Loading news...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+        let loggedInUser = null;
+        let allUsers = [];
+
+        // Check authentication
+        function checkAuth() {
+            const userData = localStorage.getItem('loggedInUser');
+            if (!userData) {
+                window.location.href = 'index.html';
+                return false;
+            }
+            loggedInUser = JSON.parse(userData);
+            document.getElementById('userName').innerHTML = `Logged in as: <strong>${loggedInUser.name}</strong>`;
+            return true;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        }
+
+        // Fetch users
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`);
+                allUsers = await response.json();
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Get user name by ID
+        function getUserName(userId) {
+            const user = allUsers.find(u => u._id === userId);
+            return user ? user.name : 'Unknown';
+        }
+
+        // Fetch and display news
+        async function fetchNews() {
+            try {
+                const response = await fetch(`${API_URL}/news`);
+                const newsList = await response.json();
+                displayNews(newsList);
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                document.getElementById('newsContainer').innerHTML = `
+                    <div class="no-news">
+                        <h3>Error loading news</h3>
+                        <p>Make sure the Express server is running on port 3000</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display news
+        function displayNews(newsList) {
+            const container = document.getElementById('newsContainer');
+            
+            if (newsList.length === 0) {
+                container.innerHTML = `
+                    <div class="no-news">
+                        <h3>No news yet</h3>
+                        <p>Be the first to create a news post!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '<div class="news-grid"></div>';
+            const grid = container.querySelector('.news-grid');
+
+            newsList.forEach(news => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                
+                const isAuthor = String(loggedInUser.id) === String(news.author_id);
+                const commentText = news.comments.length === 1 ? 'comment' : 'comments';
+
+                const title = document.createElement('h3');
+                title.textContent = news.title;
+                card.appendChild(title);
+
+                const meta = document.createElement('div');
+                meta.className = 'news-meta';
+                meta.innerHTML = `By: <strong>${getUserName(news.author_id)}</strong>
+                        ${news.comments.length > 0 ? `<span class="comment-count">💬 ${news.comments.length} ${commentText}</span>` : ''}`;
+                card.appendChild(meta);
+
+                const actions = document.createElement('div');
+                actions.className = 'news-actions';
+
+                const viewBtn = document.createElement('button');
+                viewBtn.className = 'btn btn-view';
+                viewBtn.textContent = 'View Details';
+                viewBtn.addEventListener('click', () => viewNews(news._id));
+                actions.appendChild(viewBtn);
+
+                if (isAuthor) {
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'btn btn-edit';
+                    editBtn.textContent = '✏️ Edit';
+                    editBtn.addEventListener('click', () => editNews(news._id));
+                    actions.appendChild(editBtn);
+
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'btn btn-delete';
+                    delBtn.textContent = '🗑️ Delete';
+                    delBtn.addEventListener('click', () => deleteNews(news._id));
+                    actions.appendChild(delBtn);
+                }
+
+                card.appendChild(actions);
+                grid.appendChild(card);
+            });
+        }
+
+        // View news details
+        function viewNews(newsId) {
+            window.location.href = `news-detail.html?id=${encodeURIComponent(newsId)}`;
+        }
+
+        // Edit news
+        function editNews(newsId) {
+            window.location.href = `edit-news.html?id=${encodeURIComponent(newsId)}`;
+        }
+
+        // Delete news
+        async function deleteNews(newsId) {
+            if (!confirm('Are you sure you want to delete this news?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/news/${newsId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('News deleted successfully!');
+                    fetchNews(); // Refresh list
+                } else {
+                    alert('Error deleting news');
+                }
+            } catch (error) {
+                console.error('Error deleting news:', error);
+                alert('Error deleting news');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (checkAuth()) {
+                await fetchUsers();
+                await fetchNews();
+            }
+        });
+    </script>
+</body>
+</html>
