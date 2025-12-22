@@ -1,6 +1,6 @@
 # News Portal with Backend
 
-A full-featured news portal built with **HTML**, **JavaScript**, **Express JS Server** and **MoongoDB** Database, allowing users to create, read, update, and delete news articles with comments.
+A full-featured news portal built with **HTML**, **JavaScript**, **Express JS** Server and **MoongoDB** Database, allowing users to create, read, update, and delete news articles with comments.
 
 ---
 
@@ -23,15 +23,6 @@ Before you begin, ensure you have the following installed:
 - **npm** (comes with Node.js) - [npm Documentation](https://docs.npmjs.com/)
 - **MongoDB** (cloud) - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 - **Git** (optional, for cloning)
-
-### Verify Installation
-
-```bash
-node --version    # Should show v14.0.0 or higher
-npm --version     # Should show 6.0.0 or higher
-```
-
----
 
 ## 🚀 Installation
 
@@ -113,13 +104,13 @@ news-portal-backend/
 │   ├── package.json         # Project dependencies
 │   ├── server.js            # Main server file
 │   ├── seed.js              # Database seeding script
-│   └── .env                 # Environment variables (create this)
+│   └── .env                 # Environment variables (Create This One)
 ├── create-news.html         # News creation frontend
 ├── edit-news.html           # News editing frontend
 ├── index.html               # Home page
 ├── news-detail.html         # News detail page
 ├── news-list.html           # News listing page
-└── README.md                # This file
+└── Readme.md                # This file
 ```
 
 ---
