@@ -7,11 +7,9 @@ A full-featured news portal built with **HTML**, **JavaScript**, **Express JS** 
 ## ✨ Features
 
 - ✅ RESTful API for news management
-- ✅ User management and authentication
 - ✅ Create, edit, and delete news articles
 - ✅ Add comments to news posts
 - ✅ Author-based authorization (only authors can edit/delete their posts)
-- ✅ Responsive design
 
 ---
 
