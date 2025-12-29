@@ -4,16 +4,16 @@ A full-featured news portal built with **HTML**, **JavaScript**, **Express JS** 
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ RESTful API for news management
-- ✅ Create, edit, and delete news articles
-- ✅ Add comments to news posts
-- ✅ Author-based authorization (only authors can edit/delete their posts)
+-  RESTful API for news management
+-  Create, edit, and delete news articles
+-  Add comments to news posts
+-  Author-based authorization (only authors can edit/delete their posts)
 
 ---
 
-## 📦 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -22,7 +22,7 @@ Before you begin, ensure you have the following installed:
 - **MongoDB** (cloud) - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 - **Git** (optional, for cloning)
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Clone or Navigate to the Project
 
@@ -55,7 +55,7 @@ npm install
 NB: Check .end_example file for more info.
 ```
 
-## ▶️ Running the Project
+## Running the Project
 
 ### Step 1: 
 
@@ -64,7 +64,7 @@ npm run seed
 ```
 **Expected Output:**
 ```
-✅ MongoDB Connected Successfully
+MongoDB Connected Successfully
 ```
 
 ### Step 2: 
@@ -74,7 +74,7 @@ npm run dev
 ```
 **Expected Output:**
 ```
-🚀 Server is running on http://localhost:3000
+Server is running on http://localhost:3000
 ```
 
 ### Step 3: 
@@ -88,7 +88,7 @@ index.html
 ```
 
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 news-portal-backend/
@@ -113,7 +113,7 @@ news-portal-backend/
 
 ---
 
-## 🧪 Testing the API
+## Testing the API
 
 ### Using cURL
 
