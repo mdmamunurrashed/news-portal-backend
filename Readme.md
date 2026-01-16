@@ -1,6 +1,6 @@
 # News Portal with Backend
 
-A full-featured news portal built with **HTML**, **JavaScript**, **Express JS Server**, **JWT Authentication** and **MoongoDB** Database, allowing users to create, read, update, and delete news articles with comments.
+A full-featured news portal built with **HTML**, **JavaScript**, **Express JS Server**, **JWT Authentication** and **MongoDB** Database, allowing users to create, read, update, and delete news articles with comments.
 
 ---
 
