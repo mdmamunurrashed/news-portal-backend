@@ -65,6 +65,7 @@ npm install express jsonwebtoken bcrypt
 1. Create .env file
 2. Enter PORT=(Enter Your Port Number Here)
 3. Enter MONGODB_URI=(MongoDB URL including Username & Password)
+4. Enter JWT_SECRET=(Jason Web Token)
 NB: Check .end_example file.
 ```
 
