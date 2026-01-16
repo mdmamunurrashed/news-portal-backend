@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - News Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>📰 News Portal</h1>
+            <p>Select your account to continue</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="userSelect">Select User</label>
+                <select id="userSelect" required>
+                    <option value="">-- Choose a user --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn" id="loginBtn">Login</button>
+            <p class="error" id="errorMsg">Please select a user</p>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        // Fetch users from API
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`);
+                const users = await response.json();
+                populateUserDropdown(users);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                document.getElementById('errorMsg').textContent = 'Error loading users. Make sure Express server is running!';
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        // Populate dropdown with users
+        function populateUserDropdown(users) {
+            const select = document.getElementById('userSelect');
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user._id;
+                option.textContent = user.name;
+                option.dataset.email = user.email;
+                select.appendChild(option);
+            });
+        }
+
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const select = document.getElementById('userSelect');
+            const userId = select.value;
+
+            if (!userId) {
+                document.getElementById('errorMsg').style.display = 'block';
+                return;
+            }
+
+            // Get selected user data
+            const selectedOption = select.options[select.selectedIndex];
+            const userData = {
+                id: userId,
+                name: selectedOption.textContent,
+                email: selectedOption.dataset.email
+            };
+
+            // Save to localStorage
+            localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+            // Redirect to news list
+            window.location.href = 'news-list.html';
+        });
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                window.location.href = 'news-list.html';
+            }
+            fetchUsers();
+        });
+    </script>
+</body>
+</html>
