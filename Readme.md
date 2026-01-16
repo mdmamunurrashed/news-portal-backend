@@ -55,10 +55,10 @@ cd backend
 ```bash
 npm install
 ```
-
 ```bash
-npm install bcryptjs
+npm install express jsonwebtoken bcrypt
 ```
+
 ### Step 3: Configure Database
 
 ```bash
